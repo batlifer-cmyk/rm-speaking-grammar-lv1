@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RM 스피킹 문법 학습기 — 어순</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+  :root {
+    --navy: #3A4F5C;
+    --sage: #BBCBCD;
+    --warmgray: #ECEBE6;
+    --white: #FFFFFF;
+    --correct: #4C8C6B;
+    --wrong: #C1584B;
+    --text-dim: #7A8A90;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--warmgray);
+    color: var(--navy);
+    font-family: 'Noto Sans KR', sans-serif;
+    min-height: 100vh;
+  }
+  header.app-header {
+    background: var(--navy);
+    color: var(--white);
+    padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+  header.app-header .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; letter-spacing: 2px;
+  }
+  header.app-header .logo span { color: var(--sage); font-size: 13px; letter-spacing: 1px; margin-left: 8px; font-family: 'Noto Sans KR', sans-serif; font-weight: 300; }
+  .progress-bar-wrap { display: flex; align-items: center; gap: 10px; }
+  .progress-label { font-size: 11px; color: var(--sage); }
+  .progress-bar-track { width: 110px; height: 5px; background: rgba(255,255,255,0.2); border-radius: 3px; }
+  .progress-bar-fill { height: 100%; width:0%; background: var(--sage); border-radius: 3px; transition: width .4s ease; }
+
+  .container { max-width: 680px; margin: 0 auto; padding: 20px 16px 60px; }
+
+  /* CHAPTER SELECTOR */
+  .chapter-selector h2 { font-size: 1.3rem; margin-bottom: 4px; }
+  .chapter-selector .subtitle { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 20px; }
+  .group-block { margin-bottom: 22px; }
+  .group-title {
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 1px;
+    color: var(--navy); text-transform: uppercase;
+    border-left: 4px solid var(--sage); padding-left: 8px; margin-bottom: 10px;
+  }
+  .chapter-card {
+    background: var(--white); border-radius: 10px; padding: 14px 16px;
+    margin-bottom: 8px; cursor: pointer; border: 1px solid #DCE0DC;
+    display: flex; justify-content: space-between; align-items: center;
+    transition: box-shadow .15s ease, transform .15s ease;
+  }
+  .chapter-card:hover { box-shadow: 0 4px 14px rgba(58,79,92,0.12); transform: translateY(-1px); }
+  .chapter-card .cc-name { font-weight: 700; font-size: 0.95rem; }
+  .chapter-card .cc-topic { font-size: 0.78rem; color: var(--text-dim); margin-top: 2px; }
+  .chapter-card .cc-badge {
+    background: var(--sage); color: var(--navy); font-size: 0.68rem; font-weight: 700;
+    padding: 3px 9px; border-radius: 20px; white-space: nowrap;
+  }
+
+  /* QUIZ AREA */
+  .quiz-area { display: none; }
+  .quiz-area.visible { display: block; }
+  .back-btn {
+    background: none; border: none; cursor: pointer; color: var(--navy);
+    font-size: 0.8rem; margin-bottom: 14px; padding: 0; font-family: inherit;
+    display: flex; align-items: center; gap: 4px; opacity: 0.7;
+  }
+  .back-btn:hover { opacity: 1; }
+  .quiz-header { display:flex; align-items:center; gap:8px; margin-bottom: 6px; flex-wrap: wrap; }
+  .quiz-topic-tag {
+    background: var(--navy); color: var(--white); font-size: 0.7rem; font-weight: 700;
+    padding: 3px 10px; border-radius: 20px;
+  }
+  .quiz-type-badge {
+    background: var(--white); border: 1px solid var(--sage); color: var(--navy);
+    font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+  }
+  .question-counter { font-size: 0.78rem; color: var(--text-dim); margin-bottom: 14px; }
+
+  .structure-hint {
+    background: var(--white); border-left: 4px solid var(--sage);
+    border-radius: 0 8px 8px 0; padding: 12px 16px; margin-bottom: 18px;
+    font-size: 0.8rem; line-height: 1.7;
+  }
+  .structure-hint .sh-title { font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+  .structure-hint .sh-desc { color: #55666D; }
+
+  .q-card {
+    background: var(--white); border-radius: 14px; padding: 20px;
+    box-shadow: 0 2px 10px rgba(58,79,92,0.08); margin-bottom: 16px;
+  }
+  .q-instruction { font-weight: 700; font-size: 0.95rem; margin-bottom: 10px; }
+  .q-scenario {
+    background: var(--warmgray); border-radius: 8px; padding: 8px 12px;
+    font-size: 0.82rem; margin-bottom: 12px; color: #55666D;
+  }
+  .q-scenario .q-label { font-weight:700; color: var(--navy); margin-right:6px; }
+  .q-main, .q-blank-sentence { font-size: 1.05rem; font-weight: 500; margin-bottom: 16px; line-height: 1.6; }
+  .blank-slot {
+    display: inline-block; min-width: 70px; border-bottom: 2px solid var(--navy);
+    text-align: center; font-weight: 700; color: var(--navy); padding: 0 4px;
+  }
+
+  .options-list { display: flex; flex-direction: column; gap: 8px; }
+  .option-btn {
+    display: flex; align-items: center; gap: 10px; text-align: left;
+    background: var(--warmgray); border: 2px solid transparent; border-radius: 10px;
+    padding: 11px 14px; font-family: inherit; font-size: 0.88rem; cursor: pointer;
+    transition: all .15s ease; color: var(--navy);
+  }
+  .option-btn:hover:not(:disabled) { border-color: var(--sage); }
+  .option-btn .opt-letter {
+    background: var(--navy); color: var(--white); font-weight: 700; font-size: 0.72rem;
+    width: 22px; height: 22px; border-radius: 50%; display:flex; align-items:center; justify-content:center;
+    flex-shrink: 0;
+  }
+  .option-btn.correct { background: #E4F1E9; border-color: var(--correct); }
+  .option-btn.correct .opt-letter { background: var(--correct); }
+  .option-btn.wrong { background: #F7E6E3; border-color: var(--wrong); }
+  .option-btn.wrong .opt-letter { background: var(--wrong); }
+  .option-btn:disabled { cursor: default; }
+
+  /* WORD ORDER */
+  .wo-target {
+    min-height: 52px; background: var(--warmgray); border: 2px dashed var(--sage);
+    border-radius: 10px; padding: 8px; display: flex; flex-wrap: wrap; gap: 6px;
+    margin-bottom: 14px; align-items: center;
+  }
+  .wo-target .wo-placeholder { color: var(--text-dim); font-size: 0.78rem; padding: 4px 6px; }
+  .wo-pool { display: flex; flex-wrap: wrap; gap: 8px; }
+  .wo-chip {
+    background: var(--white); border: 2px solid var(--sage); color: var(--navy);
+    font-weight: 600; font-size: 0.85rem; padding: 8px 14px; border-radius: 20px;
+    cursor: pointer; font-family: inherit; transition: all .12s ease;
+  }
+  .wo-chip:hover { background: var(--navy); color: var(--white); }
+  .wo-chip.used { opacity: 0.25; pointer-events: none; }
+  .wo-chip-placed {
+    background: var(--navy); color: var(--white); font-weight: 600; font-size: 0.85rem;
+    padding: 8px 14px; border-radius: 20px; cursor: pointer; font-family: inherit; position: relative;
+  }
+  .wo-labels { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .wo-label-tag { font-size: 0.68rem; color: var(--text-dim); background: var(--warmgray); padding: 2px 8px; border-radius: 10px; }
+
+  .feedback-box { display: none; border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; font-size: 0.85rem; line-height: 1.7; }
+  .feedback-box.correct { background: #E4F1E9; border: 1px solid var(--correct); }
+  .feedback-box.wrong { background: #F7E6E3; border: 1px solid var(--wrong); }
+  .feedback-box .fb-title { font-weight: 700; margin-bottom: 6px; }
+  .feedback-box.correct .fb-title { color: var(--correct); }
+  .feedback-box.wrong .fb-title { color: var(--wrong); }
+  .fb-source { margin-top: 8px; font-size: 0.72rem; color: var(--text-dim); border-top: 1px dashed #CBD3D0; padding-top: 6px; }
+
+  .btn-row { display: flex; gap: 10px; justify-content: flex-end; }
+  .btn { border: none; border-radius: 24px; padding: 10px 22px; font-family: inherit; font-weight: 700;
+    font-size: 0.85rem; cursor: pointer; transition: all .15s ease; }
+  .btn-primary { background: var(--navy); color: var(--white); }
+  .btn-primary:hover { background: #2C3D48; }
+  .btn-secondary { background: var(--white); color: var(--navy); border: 1px solid var(--sage); }
+  .btn:disabled { opacity: 0.4; cursor: default; }
+
+  /* SCORE */
+  .score-screen { display: none; text-align: center; padding: 40px 10px; }
+  .score-screen.visible { display: block; }
+  .score-emoji { font-size: 2.6rem; margin-bottom: 6px; }
+  .score-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 4px; }
+  .score-num { font-size: 1.8rem; font-weight: 900; color: var(--navy); margin-bottom: 6px; font-family:'Bebas Neue'; letter-spacing:1px;}
+  .score-sub { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 18px; }
+  .score-breakdown { background: var(--white); border-radius: 10px; padding: 14px 18px; text-align:left; margin-bottom: 18px; }
+  .sb-row { display:flex; justify-content: space-between; font-size: 0.82rem; padding: 5px 0; border-bottom: 1px solid var(--warmgray); }
+  .sb-row:last-child{ border-bottom:none; }
+  .sb-val.good { color: var(--correct); font-weight:700; }
+  .sb-val.bad { color: var(--wrong); font-weight:700; }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="logo">RM <span>스피킹 문법</span> 학습기</div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-track"><div class="progress-bar-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">0 / 0</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="chapter-selector" id="chapterSelector">
+    <h2>어떤 챕터로 훈련할까요?</h2>
+    <p class="subtitle">운전면허처럼, 이론(1부)을 먼저 이해하고 실기(2부)로 직접 말을 완성해보세요.</p>
+    <div id="groupContainer"></div>
+  </div>
+
+  <div class="quiz-area" id="quizArea">
+    <button class="back-btn" onclick="backToSelector()">← 챕터 선택으로</button>
+    <div class="quiz-header">
+      <span class="quiz-topic-tag" id="quizTopicTag"></span>
+      <span class="quiz-type-badge" id="quizTypeBadge"></span>
+    </div>
+    <div class="question-counter" id="questionCounter"></div>
+    <div class="structure-hint" id="structureHint"></div>
+    <div class="q-card" id="qCard"></div>
+    <div class="feedback-box" id="feedbackBox"></div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()" style="display:none">← 이전</button>
+      <button class="btn btn-secondary" id="checkBtn" onclick="checkAnswer()" style="display:none">확인</button>
+      <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">다음 문제 →</button>
+    </div>
+  </div>
+
+  <div class="score-screen" id="scoreScreen">
+    <div class="score-emoji" id="scoreEmoji"></div>
+    <div class="score-title">훈련 완료!</div>
+    <div class="score-num" id="scoreNum"></div>
+    <div class="score-sub" id="scoreSub"></div>
+    <div class="score-breakdown" id="scoreBreakdown"></div>
+    <div class="btn-row" style="justify-content:center; gap:12px;">
+      <button class="btn btn-secondary" onclick="retryChapter()">다시 도전</button>
+      <button class="btn btn-primary" onclick="backToSelector()">다른 챕터</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// DATA — 챕터그룹1: 어순 (Word Order)
+// 소스: 영어입담비법서 1권 "어순훈련"(Claire 예시) + 1~2권 실제 토픽 질문
+//       (질문은 원문 그대로, 답변 문장은 그 질문 맥락에 맞춰 새로 구성)
+// ══════════════════════════════════════════════
+const CHAPTERS = [
+  {
+    id: 'wo_1', group: '어순 (Word Order)', num: '1-1',
+    name: '기본 어순 S+V+O', topic: '하루 일과 (Yesterday)',
+    source: '1권 「어순훈련」 — Claire 매니저 예시 응용',
+    structure: {
+      title: '핵심 원리: 주어 바로 뒤에 동사!',
+      desc: '한국어는 동사(서술어)가 문장 맨 끝에 오지만, 영어는 주어(S) 다음 바로 동사(V)가 옵니다. "나는 / 만났다 / 내 친구를" → I met my friend. 이 순서 감각을 먼저 몸에 익히면 아는 단어만으로도 문장을 만들 수 있어요.'
+    },
+    questions: [
+      { type:'mc', part:1, instruction:'아래 상황에서, 한국어를 영어식 어순으로 가장 올바르게 옮긴 것은?',
+        scenario:'Q: What did you do yesterday? — "나는 만났다 내 친구를"을 말하려고 해요.',
+        options:['I my friend met.','I met my friend.','Met I my friend.','My friend I met.'],
+        answer:1,
+        feedback:{correct:'맞아요! 영어는 "나는(S) + 만났다(V) + 내 친구를(O)" 순서 그대로, 동사가 주어 바로 뒤에 옵니다.',
+                  wrong:'정답은 "I met my friend."예요. 한국어처럼 동사를 뒤로 미루면 영어에선 어색해져요. 주어 다음엔 무조건 동사!'} },
+      { type:'mc', part:1, instruction:'다음 중 영어식 어순으로 자연스러운 문장은?',
+        scenario:'Q: Did you go anywhere yesterday? — "나는 갔다 해변에"를 말하려고 해요.',
+        options:['I to the beach went.','To the beach I went.','I went to the beach.','Went I to the beach.'],
+        answer:2,
+        feedback:{correct:'정확해요! I(S) + went(V) + to the beach(장소) 순서예요. 장소는 동사 뒤에 옵니다.',
+                  wrong:'정답은 "I went to the beach."입니다. 장소 표현은 한국어처럼 앞에 오지 않고, 항상 동사 뒤에 붙어요.'} },
+      { type:'mc', part:1, instruction:'교재의 "어순훈련"은 왜 단어 암기보다 순서 감각을 먼저 연습시킬까요?',
+        scenario:'개념 이해 확인',
+        options:['문법 시험 점수를 위해서','단어를 몰라도 아는 단어만으로 문장을 완성하는 감각을 만들기 위해서','발음을 교정하기 위해서','듣기 실력을 늘리기 위해서'],
+        answer:1,
+        feedback:{correct:'맞아요! 왕초보 단계에서 어순 감각이 없으면, 단어를 다 알아도 문장을 못 만들어요. 순서부터 몸에 익히면 실전에서 말이 막히지 않습니다.',
+                  wrong:'핵심은 "아는 단어만으로도 즉시 문장을 완성하는 감각"이에요. 그래서 이 교재는 어순훈련을 가장 먼저 배치했습니다.'} },
+      { type:'fillblank', part:2, instruction:'빈칸에 들어갈 말을 고르세요.',
+        scenario:'Q: What did you do yesterday?',
+        blankSentence:'I ___ my old friend at the cafe.',
+        options:['meet','met','meeting','to meet'],
+        answer:1,
+        feedback:{correct:'맞아요! 어제(yesterday) 있었던 일이니 과거동사 met이 정답이에요.',
+                  wrong:'정답은 met입니다. 시간표현이 yesterday이므로 반드시 과거형을 써야 해요.'} },
+      { type:'fillblank', part:2, instruction:'빈칸에 들어갈 말을 고르세요.',
+        scenario:'그 해변이 어땠는지 설명하려고 해요.',
+        blankSentence:'That beach ___ a really nice place.',
+        options:['is','was','were','be'],
+        answer:1,
+        feedback:{correct:'정확해요! "그것은 ~이었다"는 과거이므로 be동사도 was로 바뀝니다.',
+                  wrong:'정답은 was예요. 과거 이야기를 하고 있으므로 be동사도 과거형(was)이 되어야 해요.'} },
+      { type:'wordorder', part:2, instruction:'단어를 순서대로 눌러 문장을 완성하세요: "나는 3시간 동안 서핑을 즐겼다"',
+        scenario:'Q: What did you do at the beach?',
+        words:['surfing','for three hours','I','enjoyed'],
+        answer:[2,3,0,1],
+        labels:['주어','동사','목적어','시간표현'],
+        feedback:{correct:'완벽해요! I(주어) + enjoyed(동사) + surfing(목적어) + for three hours(시간) 순서입니다.',
+                  wrong:'정답 순서: I → enjoyed → surfing → for three hours. 주어 다음 바로 동사, 그 다음 목적어, 시간표현은 맨 뒤!'} },
+      { type:'wordorder', part:2, instruction:'단어를 순서대로 눌러 문장을 완성하세요: "그것은 정말 재미있는 하루였다"',
+        scenario:'Q: How was your day?',
+        words:['a fun day','it','was'],
+        answer:[1,2,0],
+        labels:['주어','동사','명사구'],
+        feedback:{correct:'완벽해요! It(주어) + was(동사) + a fun day(명사구) 순서입니다.',
+                  wrong:'정답 순서: It → was → a fun day. "그것은 / 이었다 / 재밌는 하루" — 한국어 순서 그대로 영어로 옮기면 안 돼요.'} },
+    ]
+  },
+  {
+    id: 'wo_2', group: '어순 (Word Order)', num: '1-2',
+    name: '어순 확장 — 형용사·부사 위치', topic: '날씨 (Weather)',
+    source: '1권 토픽 "날씨" 실제 질문 응용',
+    structure: {
+      title: '핵심 원리: 형용사는 명사 앞, 부사는 동사 앞/뒤',
+      desc: '한국어는 "정말 좋아한다"처럼 부사가 동사 앞에 자연스럽게 붙지만, 영어도 부사는 보통 동사 앞(일반동사 수식 시)이나 문장 끝에 옵니다. 형용사는 반드시 꾸미는 명사 바로 앞에 위치해요.'
+    },
+    questions: [
+      { type:'mc', part:1, instruction:'한국어를 영어식 어순으로 가장 올바르게 옮긴 것은?',
+        scenario:'Q: What is your favorite weather? — "나는 정말 좋아한다 더운 날씨를"',
+        options:['I really love hot weather.','I love really hot weather.','Really I love hot weather.','I hot love really weather.'],
+        answer:0,
+        feedback:{correct:'맞아요! 부사 really는 동사 love 앞에, 형용사 hot은 명사 weather 앞에 옵니다.',
+                  wrong:'정답은 "I really love hot weather."예요. really(부사)는 동사 바로 앞, hot(형용사)은 명사 바로 앞이 자리입니다.'} },
+      { type:'mc', part:1, instruction:'한국어를 영어식 어순으로 가장 올바르게 옮긴 것은?',
+        scenario:'Q: What kind of weather do you hate? — "나는 정말 싫어한다 습하고 더운 날씨를"',
+        options:['I hate really humid and hot weather.','I really hate humid and hot weather.','Really humid and hot I hate weather.','I humid and hot really hate weather.'],
+        answer:1,
+        feedback:{correct:'정확해요! really(부사)는 hate(동사) 앞, humid and hot(형용사 두 개)은 weather(명사) 바로 앞에 나란히 옵니다.',
+                  wrong:'정답은 "I really hate humid and hot weather."예요. 형용사가 두 개여도 순서는 그대로 명사 앞입니다.'} },
+      { type:'fillblank', part:2, instruction:'빈칸에 들어갈 말을 고르세요.',
+        scenario:'Q: What is your favorite weather?',
+        blankSentence:'I ___ love sunny days because it makes me feel energetic.',
+        options:['real','really','more real','realest'],
+        answer:1,
+        feedback:{correct:'맞아요! 동사 love를 꾸미는 부사 자리이므로 really가 정답이에요.',
+                  wrong:'정답은 really입니다. real은 형용사라서 동사를 꾸밀 수 없어요. 동사를 꾸밀 땐 부사형(-ly)!'} },
+      { type:'fillblank', part:2, instruction:'빈칸에 들어갈 말을 고르세요.',
+        scenario:'지난여름이 얼마나 더웠는지 강조하려고 해요.',
+        blankSentence:'That was an ___ hot summer.',
+        options:['incredible','incredibly','increditable','incredibleness'],
+        answer:1,
+        feedback:{correct:'정확해요! hot(형용사)을 꾸미는 자리이므로 부사 incredibly가 와야 해요.',
+                  wrong:'정답은 incredibly입니다. 형용사(hot)를 꾸밀 때도 부사가 필요해요. "믿을 수 없을 만큼 더운".'} },
+      { type:'wordorder', part:2, instruction:'단어를 순서대로 눌러 문장을 완성하세요: "나는 매년 여름마다 해운대에 간다"',
+        scenario:'Q: Where do you usually go in summer?',
+        words:['to Haeundae','every summer','I','go'],
+        answer:[2,3,0,1],
+        labels:['주어','동사','장소','시간표현'],
+        feedback:{correct:'완벽해요! I → go → to Haeundae → every summer 순서예요. 장소가 시간표현보다 먼저 옵니다.',
+                  wrong:'정답 순서: I → go → to Haeundae → every summer. 영어는 보통 "장소 먼저, 시간은 맨 뒤"예요.'} },
+      { type:'wordorder', part:2, instruction:'단어를 순서대로 눌러 문장을 완성하세요: "습도 때문에 나는 지친다"',
+        scenario:'Q: Why do you hate humid weather?',
+        words:['tired','makes','the humidity','me'],
+        answer:[2,1,3,0],
+        labels:['주어','동사','목적어','목적격보어'],
+        feedback:{correct:'완벽해요! The humidity(주어) + makes(동사) + me(목적어) + tired(목적격보어) — 다음 챕터에서 배울 5형식 어순의 맛보기예요.',
+                  wrong:'정답 순서: The humidity → makes → me → tired. "습도가 / 만든다 / 나를 / 피곤하게" — 이 구조는 다음 소단원에서 더 깊게 다룹니다.'} },
+    ]
+  },
+  {
+    id: 'wo_3', group: '어순 (Word Order)', num: '1-3',
+    name: '5형식 맛보기 — 목적격보어', topic: '취미·음식 (Hobby & Food)',
+    source: '2권 토픽 "취미/음식" 실제 질문 응용',
+    structure: {
+      title: '핵심 원리: S + V + O + C (목적어 다음에 보어)',
+      desc: '"요리는 나를 행복하게 만든다"처럼, 목적어(O) 뒤에 그 목적어의 상태나 이름을 설명하는 보어(C)가 따라오는 구조예요. make/call처럼 "무엇을 어떻게 만들다/무엇으로 부르다"의 뜻을 가진 동사에서 자주 쓰입니다.'
+    },
+    questions: [
+      { type:'mc', part:1, instruction:'"Cooking makes me happy." 문장에서 me와 happy는 각각 무엇일까요?',
+        scenario:'Q: What is your hobby? 에 대한 답변 문장 분석',
+        options:['me=주어, happy=동사','me=목적어, happy=목적격보어(목적어의 상태 설명)','me=목적격보어, happy=목적어','둘 다 목적어'],
+        answer:1,
+        feedback:{correct:'정확해요! me는 동사 makes의 목적어, happy는 그 me가 "어떤 상태인지" 설명하는 목적격보어입니다.',
+                  wrong:'정답은 "me=목적어, happy=목적격보어"예요. makes는 "OㅁㆍC" 즉 목적어를 C한 상태로 만든다는 뜻이에요.'} },
+      { type:'mc', part:1, instruction:'한국어를 영어식 어순으로 가장 올바르게 옮긴 것은?',
+        scenario:'Q: Do you cook often at home? — "내 친구들은 부른다 나를 요리사라고"',
+        options:['My friends call me a chef.','My friends me call a chef.','A chef my friends call me.','My friends call a chef me.'],
+        answer:0,
+        feedback:{correct:'맞아요! My friends(S) + call(V) + me(O) + a chef(C) 순서. "부른다 / 나를 / 요리사라고" 그대로 이어집니다.',
+                  wrong:'정답은 "My friends call me a chef."예요. call은 목적어 바로 뒤에 그 이름/호칭(보어)이 옵니다.'} },
+      { type:'fillblank', part:2, instruction:'빈칸에 들어갈 말을 고르세요.',
+        scenario:'Q: What is your hobby?',
+        blankSentence:'Cooking Korean food for foreigners ___ me feel proud.',
+        options:['make','makes','made','making'],
+        answer:1,
+        feedback:{correct:'맞아요! 주어(Cooking ~)가 단수 취급되는 동명사구이므로 3인칭 단수형 makes가 옵니다.',
+                  wrong:'정답은 makes예요. 동명사구 주어는 단수로 취급하기 때문에 동사에 -s가 붙어요.'} },
+      { type:'fillblank', part:2, instruction:'빈칸에 들어갈 말을 고르세요.',
+        scenario:'Q: Do people give you any nicknames?',
+        blankSentence:'My friends always ___ me "the foodie" because I love trying new restaurants.',
+        options:['call','calls','called','calling'],
+        answer:0,
+        feedback:{correct:'정확해요! 주어가 My friends(복수)이고 현재 습관을 말하므로 동사원형 call이 옵니다.',
+                  wrong:'정답은 call이에요. 주어가 복수(My friends)이므로 3인칭 단수 -s를 붙이지 않아요.'} },
+      { type:'wordorder', part:2, instruction:'단어를 순서대로 눌러 문장을 완성하세요: "그 경험은 나를 더 용감하게 만들었다"',
+        scenario:'Q: Have you ever tried any exotic food?',
+        words:['braver','made','the experience','me'],
+        answer:[2,1,3,0],
+        labels:['주어','동사','목적어','목적격보어'],
+        feedback:{correct:'완벽해요! The experience(주어) + made(동사) + me(목적어) + braver(목적격보어) 순서입니다.',
+                  wrong:'정답 순서: The experience → made → me → braver. 목적어(me) 다음에 그 상태를 설명하는 보어(braver)가 옵니다.'} },
+      { type:'wordorder', part:2, instruction:'단어를 순서대로 눌러 문장을 완성하세요: "사람들은 부산을 서핑의 도시라고 부른다"',
+        scenario:'Q: What is Busan famous for?',
+        words:['a surfing city','people','Busan','call'],
+        answer:[1,3,2,0],
+        labels:['주어','동사','목적어','목적격보어'],
+        feedback:{correct:'완벽해요! People(주어) + call(동사) + Busan(목적어) + a surfing city(목적격보어) 순서예요.',
+                  wrong:'정답 순서: People → call → Busan → a surfing city. call은 "OㆍC"구조로, 목적어 뒤에 부르는 이름이 옵니다.'} },
+    ]
+  },
+];
+
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+let currentChapter = null;
+let currentQIdx = 0;
+let score = 0;
+let answers = [];
+let woBuilt = []; // word order: array of indices placed
+let hasAnswered = false;
+
+// ══════════════════════════════════════════════
+// INIT / SELECTOR
+// ══════════════════════════════════════════════
+function renderSelector() {
+  const groups = {};
+  CHAPTERS.forEach(ch => { (groups[ch.group] = groups[ch.group] || []).push(ch); });
+  const container = document.getElementById('groupContainer');
+  container.innerHTML = Object.keys(groups).map(gName => `
+    <div class="group-block">
+      <div class="group-title">${gName}</div>
+      ${groups[gName].map(ch => `
+        <div class="chapter-card" onclick="startChapter('${ch.id}')">
+          <div>
+            <div class="cc-name">${ch.num}. ${ch.name}</div>
+            <div class="cc-topic">주제: ${ch.topic}</div>
+          </div>
+          <div class="cc-badge">${ch.questions.length}문항</div>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+function startChapter(id) {
+  currentChapter = CHAPTERS.find(c => c.id === id);
+  currentQIdx = 0; score = 0; answers = [];
+  document.getElementById('chapterSelector').style.display = 'none';
+  document.getElementById('scoreScreen').classList.remove('visible');
+  document.getElementById('quizArea').classList.add('visible');
+  document.getElementById('quizTopicTag').textContent = currentChapter.topic;
+  renderStructureHint();
+  renderQuestion();
+}
+
+function backToSelector() {
+  document.getElementById('chapterSelector').style.display = 'block';
+  document.getElementById('quizArea').classList.remove('visible');
+  document.getElementById('scoreScreen').classList.remove('visible');
+}
+
+function retryChapter() { startChapter(currentChapter.id); }
+
+function renderStructureHint() {
+  const s = currentChapter.structure;
+  document.getElementById('structureHint').innerHTML =
+    `<div class="sh-title">📌 ${s.title}</div><div class="sh-desc">${s.desc}</div>`;
+}
+
+// ══════════════════════════════════════════════
+// RENDER QUESTION
+// ══════════════════════════════════════════════
+function renderQuestion() {
+  const qs = currentChapter.questions;
+  if (currentQIdx >= qs.length) { showScore(); return; }
+  const q = qs[currentQIdx];
+  const isReview = currentQIdx < answers.length;
+  hasAnswered = isReview;
+  woBuilt = [];
+
+  document.getElementById('questionCounter').textContent = `문제 ${currentQIdx+1} / ${qs.length}${isReview ? ' (복습 중)' : ''}`;
+  document.getElementById('quizTypeBadge').textContent = q.part === 1 ? '1부 이론' : (q.type === 'wordorder' ? '2부 실기 · 순서배치' : '2부 실기 · 빈칸채우기');
+  updateProgress();
+
+  document.getElementById('feedbackBox').style.display = 'none';
+  document.getElementById('feedbackBox').className = 'feedback-box';
+  document.getElementById('checkBtn').style.display = (q.type === 'wordorder') ? 'inline-block' : 'none';
+  document.getElementById('nextBtn').style.display = isReview ? 'inline-block' : 'none';
+  document.getElementById('prevBtn').style.display = currentQIdx > 0 ? 'inline-block' : 'none';
+
+  const card = document.getElementById('qCard');
+
+  if (q.type === 'mc' || q.type === 'fillblank') {
+    const mainHTML = q.type === 'fillblank'
+      ? `<div class="q-blank-sentence">${q.blankSentence.replace('___', '<span class="blank-slot">?</span>')}</div>`
+      : '';
+    card.innerHTML = `
+      <div class="q-instruction">${q.instruction}</div>
+      ${q.scenario ? `<div class="q-scenario"><span class="q-label">상황</span>${q.scenario}</div>` : ''}
+      ${mainHTML}
+      <div class="options-list">
+        ${q.options.map((opt,i) => `
+          <button class="option-btn" onclick="selectMC(${i})" id="opt_${i}">
+            <span class="opt-letter">${String.fromCharCode(65+i)}</span><span>${opt}</span>
+          </button>`).join('')}
+      </div>`;
+    if (isReview) {
+      setTimeout(() => {
+        document.querySelectorAll('.option-btn').forEach((btn,i) => {
+          btn.disabled = true;
+          if (i === q.answer) btn.classList.add('correct');
+        });
+        showFeedback(answers[currentQIdx]?.correct, q);
+      }, 0);
+    }
+  } else if (q.type === 'wordorder') {
+    const shuffled = q.words.map((w,i) => ({w, origIdx:i})).sort(() => Math.random()-0.5);
+    card.innerHTML = `
+      <div class="q-instruction">${q.instruction}</div>
+      ${q.scenario ? `<div class="q-scenario"><span class="q-label">상황</span>${q.scenario}</div>` : ''}
+      <div class="wo-target" id="woTarget"><span class="wo-placeholder">단어를 눌러 여기에 순서대로 쌓으세요</span></div>
+      <div class="wo-pool" id="woPool">
+        ${shuffled.map(item => `<button class="wo-chip" data-idx="${item.origIdx}" onclick="pickWord(this, ${item.origIdx})">${item.w}</button>`).join('')}
+      </div>
+      <div class="wo-labels">${q.labels.map(l => `<span class="wo-label-tag">${l}</span>`).join('')}</div>
+    `;
+    if (isReview) {
+      setTimeout(() => {
+        document.querySelectorAll('.wo-chip').forEach(c => c.disabled = true);
+        renderWoTargetReview(q);
+        document.getElementById('checkBtn').style.display = 'none';
+        showFeedback(answers[currentQIdx]?.correct, q);
+      }, 0);
+    }
+  }
+}
+
+function renderWoTargetReview(q) {
+  const target = document.getElementById('woTarget');
+  target.innerHTML = q.answer.map(idx => `<span class="wo-chip-placed">${q.words[idx]}</span>`).join('');
+}
+
+// ══════════════════════════════════════════════
+// MC / FILLBLANK LOGIC
+// ══════════════════════════════════════════════
+function selectMC(idx) {
+  if (hasAnswered) return;
+  hasAnswered = true;
+  const q = currentChapter.questions[currentQIdx];
+  const correct = idx === q.answer;
+  document.querySelectorAll('.option-btn').forEach((btn,i) => {
+    btn.disabled = true;
+    if (i === q.answer) btn.classList.add('correct');
+    else if (i === idx) btn.classList.add('wrong');
+  });
+  answers[currentQIdx] = {correct};
+  if (correct) score++;
+  showFeedback(correct, q);
+  document.getElementById('nextBtn').style.display = 'inline-block';
+}
+
+// ══════════════════════════════════════════════
+// WORD ORDER LOGIC
+// ══════════════════════════════════════════════
+function pickWord(btn, idx) {
+  if (hasAnswered) return;
+  btn.classList.add('used');
+  woBuilt.push(idx);
+  renderWoTarget();
+}
+
+function renderWoTarget() {
+  const q = currentChapter.questions[currentQIdx];
+  const target = document.getElementById('woTarget');
+  if (woBuilt.length === 0) {
+    target.innerHTML = `<span class="wo-placeholder">단어를 눌러 여기에 순서대로 쌓으세요</span>`;
+    return;
+  }
+  target.innerHTML = woBuilt.map((idx, pos) =>
+    `<span class="wo-chip-placed" onclick="removeWord(${pos})">${q.words[idx]} ✕</span>`).join('');
+}
+
+function removeWord(pos) {
+  if (hasAnswered) return;
+  const q = currentChapter.questions[currentQIdx];
+  const removedIdx = woBuilt[pos];
+  woBuilt.splice(pos, 1);
+  renderWoTarget();
+  const chip = document.querySelector(`.wo-chip[data-idx="${removedIdx}"]`);
+  if (chip) chip.classList.remove('used');
+}
+
+function checkAnswer() {
+  const q = currentChapter.questions[currentQIdx];
+  if (q.type !== 'wordorder') return;
+  if (woBuilt.length !== q.answer.length) return;
+  hasAnswered = true;
+  const correct = JSON.stringify(woBuilt) === JSON.stringify(q.answer);
+  document.querySelectorAll('.wo-chip').forEach(c => c.disabled = true);
+  const target = document.getElementById('woTarget');
+  target.querySelectorAll('.wo-chip-placed').forEach((el,i) => {
+    el.style.pointerEvents = 'none';
+    el.textContent = el.textContent.replace(' ✕','');
+    el.style.background = (woBuilt[i] === q.answer[i]) ? 'var(--correct)' : 'var(--wrong)';
+  });
+  answers[currentQIdx] = {correct};
+  if (correct) score++;
+  document.getElementById('checkBtn').style.display = 'none';
+  showFeedback(correct, q);
+  document.getElementById('nextBtn').style.display = 'inline-block';
+}
+
+// ══════════════════════════════════════════════
+// FEEDBACK / NAV
+// ══════════════════════════════════════════════
+function showFeedback(correct, q) {
+  const fb = document.getElementById('feedbackBox');
+  fb.className = `feedback-box ${correct ? 'correct':'wrong'}`;
+  fb.innerHTML = `
+    <div class="fb-title">${correct ? '✅ 정확해요!' : '❌ 다시 보기'}</div>
+    <div>${correct ? q.feedback.correct : q.feedback.wrong}</div>
+    <div class="fb-source">출처: ${currentChapter.source} · ${currentChapter.topic} 토픽</div>`;
+  fb.style.display = 'block';
+}
+
+function prevQuestion() {
+  if (currentQIdx <= 0) return;
+  if (answers.length > currentQIdx - 1 && answers[currentQIdx-1] !== undefined) {
+    // keep score consistent; simplest: recompute score from answers
+  }
+  currentQIdx--;
+  renderQuestion();
+}
+function nextQuestion() { currentQIdx++; renderQuestion(); }
+
+function showScore() {
+  document.getElementById('quizArea').classList.remove('visible');
+  const ss = document.getElementById('scoreScreen');
+  ss.classList.add('visible');
+  const total = currentChapter.questions.length;
+  const pct = Math.round((score/total)*100);
+  document.getElementById('scoreEmoji').textContent = pct>=80?'🎉':pct>=60?'💪':'📖';
+  document.getElementById('scoreNum').textContent = `${score} / ${total}`;
+  document.getElementById('scoreSub').textContent = pct>=80?'완벽해요! 이제 수업에서 바로 말해볼 준비가 됐어요.':pct>=60?'절반 이상 맞혔어요. 틀린 문제를 복습해보세요!':'구조를 한 번 더 확인하고 다시 도전해보세요!';
+  const correct = answers.filter(a=>a && a.correct).length;
+  const wrong = answers.filter(a=>a && !a.correct).length;
+  document.getElementById('scoreBreakdown').innerHTML = `
+    <div class="sb-row"><span>챕터</span><span>${currentChapter.num}. ${currentChapter.name}</span></div>
+    <div class="sb-row"><span>주제</span><span>${currentChapter.topic}</span></div>
+    <div class="sb-row"><span>정답</span><span class="sb-val good">${correct}개</span></div>
+    <div class="sb-row"><span>오답</span><span class="sb-val bad">${wrong}개</span></div>
+    <div class="sb-row"><span>정답률</span><span>${pct}%</span></div>`;
+  updateProgress(true);
+}
+
+function updateProgress(done=false) {
+  const total = currentChapter ? currentChapter.questions.length : 0;
+  const pct = done ? 100 : (total ? Math.round((currentQIdx/total)*100) : 0);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = done ? `${total} / ${total}` : `${currentQIdx} / ${total}`;
+}
+
+renderSelector();
+</script>
+</body>
+</html>
