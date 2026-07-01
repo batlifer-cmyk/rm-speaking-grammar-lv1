@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RM 스피킹 문법 학습기 — 어순</title>
+<title>RM 스피킹 문법 학습기</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
 
@@ -158,6 +158,15 @@
   .feedback-box.wrong .fb-title { color: var(--wrong); }
   .fb-source { margin-top: 8px; font-size: 0.72rem; color: var(--text-dim); border-top: 1px dashed #CBD3D0; padding-top: 6px; }
 
+  /* CONCEPT CARD */
+  .concept-emoji { font-size: 2.2rem; margin-bottom: 8px; }
+  .concept-title { font-weight: 700; font-size: 1.12rem; margin-bottom: 12px; color: var(--navy); }
+  .concept-body { font-size: 0.92rem; line-height: 1.85; color: #3f4f56; margin-bottom: 16px; }
+  .concept-examples { background: var(--warmgray); border-radius: 10px; padding: 12px 14px; }
+  .ex-row { display: flex; gap: 10px; padding: 5px 0; font-size: 0.82rem; }
+  .ex-label { font-weight: 700; color: var(--navy); min-width: 78px; flex-shrink:0; }
+  .ex-text { color: #55666D; }
+
   .btn-row { display: flex; gap: 10px; justify-content: flex-end; }
   .btn { border: none; border-radius: 24px; padding: 10px 22px; font-family: inherit; font-weight: 700;
     font-size: 0.85rem; cursor: pointer; transition: all .15s ease; }
@@ -194,7 +203,7 @@
 
   <div class="chapter-selector" id="chapterSelector">
     <h2>어떤 챕터로 훈련할까요?</h2>
-    <p class="subtitle">운전면허처럼, 이론(1부)을 먼저 이해하고 실기(2부)로 직접 말을 완성해보세요.</p>
+    <p class="subtitle">운전면허처럼, 개념(0부)과 이론(1부)을 먼저 이해하고 실기(2부)로 직접 말을 완성해보세요.</p>
     <div id="groupContainer"></div>
   </div>
 
@@ -231,13 +240,16 @@
 
 <script>
 // ══════════════════════════════════════════════
-// DATA — 챕터그룹1: 어순 (Word Order)
-// 소스: 영어입담비법서 1권 "어순훈련"(Claire 예시) + 1~2권 실제 토픽 질문
-//       (질문은 원문 그대로, 답변 문장은 그 질문 맥락에 맞춰 새로 구성)
+// DATA
+// 소스 원칙: 질문은 교재(1~2권) 실제 토픽 질문 그대로, 답변 문장은 해당 질문 맥락에
+// 맞춰 새로 구성. 왕초보 대상이므로 동사 단수/복수 일치, 전치사 디테일은 출제 제외.
+// 완료형/문장확장/도치는 문법용어 없이 상황·비유로 먼저 개념교육(0부) 후 퀴즈 진행.
 // ══════════════════════════════════════════════
 const CHAPTERS = [
+
+  // ══════════════ 그룹 1: 어순 (Word Order) ══════════════
   {
-    id: 'wo_1', group: '어순 (Word Order)', num: '1-1',
+    id: 'wo_1', group: '① 어순 (Word Order)', num: '1-1',
     name: '기본 어순 S+V+O', topic: '하루 일과 (Yesterday)',
     source: '1권 「어순훈련」 — Claire 매니저 예시 응용',
     structure: {
@@ -294,7 +306,7 @@ const CHAPTERS = [
     ]
   },
   {
-    id: 'wo_2', group: '어순 (Word Order)', num: '1-2',
+    id: 'wo_2', group: '① 어순 (Word Order)', num: '1-2',
     name: '어순 확장 — 형용사·부사 위치', topic: '날씨 (Weather)',
     source: '1권 토픽 "날씨" 실제 질문 응용',
     structure: {
@@ -339,62 +351,309 @@ const CHAPTERS = [
         scenario:'Q: Why do you hate humid weather?',
         words:['tired','makes','the humidity','me'],
         answer:[2,1,3,0],
-        labels:['주어','동사','목적어','목적격보어'],
-        feedback:{correct:'완벽해요! The humidity(주어) + makes(동사) + me(목적어) + tired(목적격보어) — 다음 챕터에서 배울 5형식 어순의 맛보기예요.',
+        labels:['주어','동사','목적어','상태 설명'],
+        feedback:{correct:'완벽해요! The humidity(주어) + makes(동사) + me(목적어) + tired(상태 설명) — 다음 챕터에서 배울 구조의 맛보기예요.',
                   wrong:'정답 순서: The humidity → makes → me → tired. "습도가 / 만든다 / 나를 / 피곤하게" — 이 구조는 다음 소단원에서 더 깊게 다룹니다.'} },
     ]
   },
   {
-    id: 'wo_3', group: '어순 (Word Order)', num: '1-3',
-    name: '5형식 맛보기 — 목적격보어', topic: '취미·음식 (Hobby & Food)',
+    id: 'wo_3', group: '① 어순 (Word Order)', num: '1-3',
+    name: '문장 늘리기 — 목적어 뒤에 상태 붙이기', topic: '취미·음식 (Hobby & Food)',
     source: '2권 토픽 "취미/음식" 실제 질문 응용',
     structure: {
-      title: '핵심 원리: S + V + O + C (목적어 다음에 보어)',
-      desc: '"요리는 나를 행복하게 만든다"처럼, 목적어(O) 뒤에 그 목적어의 상태나 이름을 설명하는 보어(C)가 따라오는 구조예요. make/call처럼 "무엇을 어떻게 만들다/무엇으로 부르다"의 뜻을 가진 동사에서 자주 쓰입니다.'
+      title: '핵심 원리: 무엇을(O) + 어떻게(C)',
+      desc: '"요리는 나를 행복하게 만든다"처럼, 목적어 뒤에 그 목적어의 상태나 이름을 설명하는 말이 따라오는 구조예요. make/call처럼 "무엇을 어떻게 만들다/무엇으로 부르다"의 뜻을 가진 동사에서 자주 쓰입니다.'
     },
     questions: [
       { type:'mc', part:1, instruction:'"Cooking makes me happy." 문장에서 me와 happy는 각각 무엇일까요?',
         scenario:'Q: What is your hobby? 에 대한 답변 문장 분석',
-        options:['me=주어, happy=동사','me=목적어, happy=목적격보어(목적어의 상태 설명)','me=목적격보어, happy=목적어','둘 다 목적어'],
+        options:['me=주어, happy=동사','me=목적어, happy=me가 어떤 상태인지 설명하는 말','me=상태 설명, happy=목적어','둘 다 목적어'],
         answer:1,
-        feedback:{correct:'정확해요! me는 동사 makes의 목적어, happy는 그 me가 "어떤 상태인지" 설명하는 목적격보어입니다.',
-                  wrong:'정답은 "me=목적어, happy=목적격보어"예요. makes는 "OㅁㆍC" 즉 목적어를 C한 상태로 만든다는 뜻이에요.'} },
+        feedback:{correct:'정확해요! me는 동사 makes의 목적어, happy는 그 me가 "어떤 상태인지" 설명하는 말(문법 용어: 목적격보어)입니다.',
+                  wrong:'정답은 "me=목적어, happy=상태 설명"이에요. makes는 "무엇을 어떤 상태로 만든다"는 뜻이라, 목적어 뒤에 상태를 나타내는 말(목적격보어)이 따라와요.'} },
       { type:'mc', part:1, instruction:'한국어를 영어식 어순으로 가장 올바르게 옮긴 것은?',
         scenario:'Q: Do you cook often at home? — "내 친구들은 부른다 나를 요리사라고"',
         options:['My friends call me a chef.','My friends me call a chef.','A chef my friends call me.','My friends call a chef me.'],
         answer:0,
-        feedback:{correct:'맞아요! My friends(S) + call(V) + me(O) + a chef(C) 순서. "부른다 / 나를 / 요리사라고" 그대로 이어집니다.',
-                  wrong:'정답은 "My friends call me a chef."예요. call은 목적어 바로 뒤에 그 이름/호칭(보어)이 옵니다.'} },
+        feedback:{correct:'맞아요! My friends(S) + call(V) + me(O) + a chef(호칭) 순서. "부른다 / 나를 / 요리사라고" 그대로 이어집니다. 이 구조를 문법 용어로 5형식이라고 불러요.',
+                  wrong:'정답은 "My friends call me a chef."예요. call은 목적어 바로 뒤에 그 이름/호칭이 옵니다.'} },
       { type:'fillblank', part:2, instruction:'빈칸에 들어갈 말을 고르세요.',
-        scenario:'Q: What is your hobby?',
-        blankSentence:'Cooking Korean food for foreigners ___ me feel proud.',
-        options:['make','makes','made','making'],
-        answer:1,
-        feedback:{correct:'맞아요! 주어(Cooking ~)가 단수 취급되는 동명사구이므로 3인칭 단수형 makes가 옵니다.',
-                  wrong:'정답은 makes예요. 동명사구 주어는 단수로 취급하기 때문에 동사에 -s가 붙어요.'} },
-      { type:'fillblank', part:2, instruction:'빈칸에 들어갈 말을 고르세요.',
-        scenario:'Q: Do people give you any nicknames?',
-        blankSentence:'My friends always ___ me "the foodie" because I love trying new restaurants.',
-        options:['call','calls','called','calling'],
+        scenario:'Q: What is your hobby? — "요리는 나를 자랑스럽게 만든다"',
+        blankSentence:'Cooking Korean food for foreigners makes me ___.',
+        options:['proud','proudly','pride','prouder'],
         answer:0,
-        feedback:{correct:'정확해요! 주어가 My friends(복수)이고 현재 습관을 말하므로 동사원형 call이 옵니다.',
-                  wrong:'정답은 call이에요. 주어가 복수(My friends)이므로 3인칭 단수 -s를 붙이지 않아요.'} },
+        feedback:{correct:'맞아요! "나(me)를 어떤 상태로 만드는지" 설명하는 자리라서 형용사 proud가 와야 해요. 부사(proudly)가 아니에요.',
+                  wrong:'정답은 proud입니다. 이 자리는 동사를 꾸미는 자리가 아니라 목적어(me)의 상태를 설명하는 자리라서 형용사가 와요.'} },
       { type:'wordorder', part:2, instruction:'단어를 순서대로 눌러 문장을 완성하세요: "그 경험은 나를 더 용감하게 만들었다"',
         scenario:'Q: Have you ever tried any exotic food?',
         words:['braver','made','the experience','me'],
         answer:[2,1,3,0],
-        labels:['주어','동사','목적어','목적격보어'],
-        feedback:{correct:'완벽해요! The experience(주어) + made(동사) + me(목적어) + braver(목적격보어) 순서입니다.',
-                  wrong:'정답 순서: The experience → made → me → braver. 목적어(me) 다음에 그 상태를 설명하는 보어(braver)가 옵니다.'} },
-      { type:'wordorder', part:2, instruction:'단어를 순서대로 눌러 문장을 완성하세요: "사람들은 부산을 서핑의 도시라고 부른다"',
-        scenario:'Q: What is Busan famous for?',
-        words:['a surfing city','people','Busan','call'],
+        labels:['주어','동사','목적어','상태 설명'],
+        feedback:{correct:'완벽해요! The experience(주어) + made(동사) + me(목적어) + braver(상태 설명) 순서입니다.',
+                  wrong:'정답 순서: The experience → made → me → braver. 목적어(me) 다음에 그 상태를 설명하는 말(braver)이 옵니다.'} },
+      { type:'wordorder', part:2, instruction:'단어를 순서대로 눌러 문장을 완성하세요: "사람들은 그 카페를 우리 동네 비밀장소라고 부른다"',
+        scenario:'Q: What is your favorite cafe like?',
+        words:['our neighborhood secret spot','people','the cafe','call'],
         answer:[1,3,2,0],
-        labels:['주어','동사','목적어','목적격보어'],
-        feedback:{correct:'완벽해요! People(주어) + call(동사) + Busan(목적어) + a surfing city(목적격보어) 순서예요.',
-                  wrong:'정답 순서: People → call → Busan → a surfing city. call은 "OㆍC"구조로, 목적어 뒤에 부르는 이름이 옵니다.'} },
+        labels:['주어','동사','목적어','호칭 설명'],
+        feedback:{correct:'완벽해요! People(주어) + call(동사) + the cafe(목적어) + our neighborhood secret spot(호칭) 순서예요.',
+                  wrong:'정답 순서: People → call → the cafe → our neighborhood secret spot. call은 목적어 뒤에 부르는 이름이 옵니다.'} },
     ]
   },
+
+  // ══════════════ 그룹 2: 완료형 5종 ══════════════
+  {
+    id: 'pf_1', group: '② 완료형 — 시간 체크포인트', num: '2-1',
+    name: '현재완료 — 체크포인트는 "지금"', topic: '여행 경험',
+    source: '2권 토픽 "여행" 실제 질문 응용',
+    structure: { title: '리스닝 목표', desc: '체크포인트가 "지금"일 때 쓰는 표현이에요. have/has + p.p.를 들으면 "지금 이 순간, 과거~지금의 경험을 뭉뚱그려 말하고 있다"고 바로 알아들으면 됩니다.' },
+    concept: {
+      emoji: '📍', title: '완료형은 "체크포인트에 서서 뒤돌아보기"',
+      body: '완료형은 언제나 "어떤 시간 지점에 서서, 그 전부터 이어온 이야기를 한 번에 말하기"예요. 등산로 체크포인트에 도착해서 "여기까지 오면서 있었던 일"을 한 번에 정리해서 말하는 것과 같아요. 현재완료는 그 체크포인트가 바로 <b>지금</b>이에요.',
+      examples: [ {label:'상황', text:'지금까지 일본에 3번 가봤어 (총 경험을 정리)'}, {label:'신호', text:'have/has + p.p.'} ]
+    },
+    questions: [
+      { type:'mc', part:1, instruction:'상대방이 "I have visited Japan three times."라고 말했어요. 이 사람이 지금 서 있는 시간 지점은 어디일까요?',
+        options:['어제 어느 한 순간','지금 이 순간, 과거 경험을 총정리해서 말하는 중','아직 오지 않은 미래','정확히 알 수 없다'],
+        answer:1,
+        feedback:{correct:'맞아요! have + p.p.는 지금 이 순간에 서서 과거의 경험을 총정리해서 말하는 신호예요. 문법 용어로는 "현재완료(have/has+p.p.)"라고 불러요.',
+                  wrong:'정답은 "지금 이 순간"이에요. have + p.p.는 화자가 지금 시점에 서서 과거~지금의 경험을 뭉뚱그려 말한다는 신호예요. (문법 용어: 현재완료)'} },
+      { type:'mc', part:1, instruction:'Q: Have you ever tried sushi? 라는 질문에 "지금까지의 총 경험"으로 답하려고 해요. 그 느낌에 맞는 문장은?',
+        options:['I tried sushi many times.','I have tried sushi many times.','I try sushi many times.','I will try sushi many times.'],
+        answer:1,
+        feedback:{correct:'정확해요! 지금 시점에 서서 지금까지의 경험을 총정리하는 느낌이라 현재완료(have tried)가 맞아요.',
+                  wrong:'정답은 "I have tried sushi many times."예요. 단순과거(tried)는 그냥 한 시점을 콕 찍는 느낌이라, "지금까지 총 몇 번"이라는 뉘앙스와는 달라요.'} },
+      { type:'mc', part:1, instruction:'원어민이 "I have just finished my homework."라고 말했어요. just와 함께 쓰인 이 표현이 주는 느낌은?',
+        options:['오래 전에 끝냈다','방금 막 끝났고, 그 여운이 지금까지 남아있다','내일 끝낼 것이다','끝낸 적이 없다'],
+        answer:1,
+        feedback:{correct:'맞아요! just는 현재완료와 함께 쓰여 "방금 막 일어난 일이 지금까지 영향을 주고 있다"는 느낌을 줘요.',
+                  wrong:'정답은 "방금 막 끝났다"예요. have/has + just + p.p.는 "막 끝난 일이 지금까지 이어진다"는 느낌의 대표 패턴이에요.'} },
+    ]
+  },
+  {
+    id: 'pf_2', group: '② 완료형 — 시간 체크포인트', num: '2-2',
+    name: '과거완료 — 체크포인트가 "과거의 한 지점"', topic: '가족·추억 이야기',
+    source: '1~2권 토픽 "가족/추억" 실제 질문 응용',
+    structure: { title: '리스닝 목표', desc: 'had + p.p.를 들으면 "두 가지 과거 사건 중 이게 더 먼저 일어난 일이구나"라고 바로 시간 순서를 파악할 수 있으면 됩니다.' },
+    concept: {
+      emoji: '⏮️', title: '체크포인트가 과거로 이동하면?',
+      body: '이번엔 체크포인트 자체가 과거의 한 시점이에요. 그리고 그 지점보다 "더 전에" 있었던 일을 말할 때 써요. 두 과거 사건 중 "먼저 있었던 일"이라는 걸 표시해주는 신호예요.',
+      examples: [ {label:'상황', text:'내가 도착했을 때, 그는 이미 떠난 후였다'}, {label:'신호', text:'had + p.p.'} ]
+    },
+    questions: [
+      { type:'mc', part:1, instruction:'"When I arrived at the party, he had already left." 이 문장에서 "그가 떠난 것"과 "내가 도착한 것" 중 어느 게 먼저 일어난 일일까요?',
+        options:['그가 떠난 것이 먼저','내가 도착한 것이 먼저','동시에 일어났다','알 수 없다'],
+        answer:0,
+        feedback:{correct:'맞아요! had + p.p.(과거완료)는 "그보다 더 먼저 있었던 일"을 표시하는 신호예요. 그래서 그가 떠난 게 내가 도착하기 전이에요.',
+                  wrong:'정답은 "그가 떠난 것이 먼저"예요. had left(과거완료)는 arrived(단순과거)보다 더 이전에 일어난 일임을 알려주는 신호예요.'} },
+      { type:'mc', part:1, instruction:'다음 중, 두 과거 사건 중 무엇이 먼저 일어났는지 명확히 구분해서 말하는 문장은?',
+        options:['I lost the ticket that my friend gave me.','I had lost the ticket before I noticed it.','I lose the ticket.','I will lose the ticket.'],
+        answer:1,
+        feedback:{correct:'정확해요! had lost는 noticed(알아챈 것)보다 더 먼저 잃어버렸다는 시간 순서를 명확히 보여줘요.',
+                  wrong:'정답은 "I had lost the ticket before I noticed it."이에요. had + p.p.가 "그보다 앞서 일어난 일"을 표시해줍니다.'} },
+      { type:'mc', part:1, instruction:'상대가 "By the time I was 20, I had already visited 10 countries."라고 말했어요. 이 말에서 화자가 강조하는 것은?',
+        options:['20살이 되기 전에 이미 10개국을 가봤다는, 그 시점 이전의 성과','20살이 되면 10개국을 갈 계획이다','지금 10개국에 있다','20살에 처음 여행을 시작했다'],
+        answer:0,
+        feedback:{correct:'맞아요! "20살"이라는 과거의 체크포인트를 세워놓고, 그 이전까지 쌓아온 성과(10개국 방문)를 돌아보는 문장이에요.',
+                  wrong:'정답은 "20살이 되기 전에 이미 10개국을 가봤다"예요. had visited는 "20살"이라는 체크포인트보다 더 앞서 일어난 일들을 정리해서 말하는 신호예요.'} },
+    ]
+  },
+  {
+    id: 'pf_3', group: '② 완료형 — 시간 체크포인트', num: '2-3',
+    name: '미래완료 — 체크포인트가 "아직 오지 않은 미래"', topic: '목표·계획',
+    source: '2권 토픽 "직업/목표" 실제 질문 응용',
+    structure: { title: '리스닝 목표', desc: 'will have + p.p.를 들으면 "미래의 어느 시점까지는 이 일이 끝나 있을 것"이라는 뜻으로 바로 이해하면 됩니다.' },
+    concept: {
+      emoji: '⏭️', title: '체크포인트를 미래에 미리 세워두기',
+      body: '이번엔 체크포인트를 미래의 한 지점에 미리 세워놓고, "그때가 되면 이 일은 이미 끝나 있을 것이다"라고 미리 말하는 거예요.',
+      examples: [ {label:'상황', text:'내년이면 나는 이 일을 5년째 하고 있을 것이다 (5년을 채운 상태)'}, {label:'신호', text:'will have + p.p.'} ]
+    },
+    questions: [
+      { type:'mc', part:1, instruction:'"By next year, I will have worked here for five years." 화자는 미래의 어느 시점에 서서 무엇을 돌아보고 있는 걸까요?',
+        options:['내년이라는 미래 시점에 서서, 그때까지 5년을 채운 상태를 미리 말하는 것','지금 5년째 일하고 있다는 것','작년에 일을 시작했다는 것','5년 후에 일을 그만둘 것이라는 것'],
+        answer:0,
+        feedback:{correct:'맞아요! will have + p.p.(미래완료)는 미래의 한 체크포인트를 세워놓고, 그때까지는 이 일이 완료된 상태일 거라고 미리 말하는 신호예요.',
+                  wrong:'정답은 "내년까지 5년을 채운 상태를 미리 말하는 것"이에요. will have worked는 미래 시점 기준으로 이미 완료된 상태를 나타냅니다.'} },
+      { type:'mc', part:1, instruction:'다음 중 "미래의 특정 시점까지는 이 일이 끝나 있을 것"이라는 느낌을 주는 문장은?',
+        options:['I will finish the project by Friday.','I will have finished the project by Friday.','I finish the project on Friday.','I finished the project on Friday.'],
+        answer:1,
+        feedback:{correct:'정확해요! will have finished는 "금요일까지는 이미 끝나 있을 것"이라는 완료 뉘앙스를 강조해요.',
+                  wrong:'정답은 "I will have finished the project by Friday."예요. will have + p.p.가 "그 시점까지는 완료 상태"라는 느낌을 줘요.'} },
+      { type:'mc', part:1, instruction:'"By the time you arrive, I will have already left."를 들었을 때, 상대방이 도착하는 시점에 화자는 어떤 상태일까요?',
+        options:['이미 떠난 후일 것이다','아직 도착을 기다리고 있을 것이다','막 도착할 것이다','알 수 없다'],
+        answer:0,
+        feedback:{correct:'맞아요! will have left는 "상대가 도착하는 미래 시점"을 체크포인트로 세우고, 그때는 이미 떠난 상태라는 걸 미리 알려주는 신호예요.',
+                  wrong:'정답은 "이미 떠난 후일 것"이에요. will have + p.p.는 미래의 특정 시점 기준으로 이미 끝나 있을 일을 나타냅니다.'} },
+    ]
+  },
+  {
+    id: 'pf_4', group: '② 완료형 — 시간 체크포인트', num: '2-4',
+    name: '완료진행 — "사진"이 아니라 "짧은 동영상"', topic: '지속되는 활동',
+    source: '1~2권 토픽 "공부/일상" 실제 질문 응용',
+    structure: { title: '리스닝 목표', desc: 'have/has been -ing를 들으면 "그 일이 지금까지 죽 계속 이어지고 있다"는 지속감으로 바로 이해하면 됩니다.' },
+    concept: {
+      emoji: '🎬', title: '한 장의 사진이 아니라 짧은 동영상',
+      body: '완료형이 "체크포인트에서 찍은 한 장의 사진"이라면, 완료진행형은 "지금까지 계속 이어지고 있는 짧은 동영상"에 가까워요. "그 일이 죽 계속되고 있다"는 느낌을 강조하고 싶을 때 써요.',
+      examples: [ {label:'상황', text:'나는 2시간째 계속 공부하는 중이다 (그리고 지금도 하고 있다)'}, {label:'신호', text:'have/has been -ing'} ]
+    },
+    questions: [
+      { type:'mc', part:1, instruction:'"I have been studying for two hours." 이 문장이 강조하는 느낌은?',
+        options:['공부를 2시간 전에 끝냈다','2시간 동안 계속 공부해왔고, 지금도 하고 있다는 지속감','2시간 후에 공부할 것이다','공부를 한 번도 안 했다'],
+        answer:1,
+        feedback:{correct:'맞아요! have been studying(완료진행)은 "지금까지 죽 계속되고 있는 동작"을 강조하는 신호예요.',
+                  wrong:'정답은 "2시간 동안 계속 공부해왔고, 지금도 하고 있다"예요. have been -ing는 짧은 동영상처럼 지속되는 느낌을 담아요.'} },
+      { type:'mc', part:1, instruction:'다음 중 "그 동작이 지금까지 쭉 이어지고 있다"는 느낌이 가장 강한 문장은?',
+        options:['I have studied English.','I have been studying English.','I studied English.','I will study English.'],
+        answer:1,
+        feedback:{correct:'정확해요! have been studying이 "지금도 계속 진행 중"이라는 느낌을 가장 강하게 전달해요.',
+                  wrong:'정답은 "I have been studying English."예요. -ing가 붙은 완료진행형이 "계속 진행 중"이라는 지속감을 만들어줍니다.'} },
+      { type:'mc', part:1, instruction:'"It has been raining since this morning."를 듣고 알 수 있는 것은?',
+        options:['아침부터 비가 와서 지금도 계속 오고 있다','아침에 잠깐 비가 왔다가 그쳤다','오늘 저녁부터 비가 올 것이다','어제 비가 왔다'],
+        answer:0,
+        feedback:{correct:'맞아요! has been raining은 "아침부터 지금까지 비가 계속 내리고 있다"는 지속 상황을 알려주는 신호예요.',
+                  wrong:'정답은 "아침부터 지금도 계속 오고 있다"예요. has been -ing는 그 동작이 멈추지 않고 이어지고 있다는 뜻이에요.'} },
+    ]
+  },
+  {
+    id: 'pf_5', group: '② 완료형 — 시간 체크포인트', num: '2-5',
+    name: '완료수동 — "완료" + "당함"이 겹칠 때', topic: '상태 묘사 (물건·장소)',
+    source: '2권 토픽 "일상/장소" 실제 질문 응용',
+    structure: { title: '리스닝 목표', desc: 'have/has been + p.p.를 들으면 "누군가에 의해 그 일이 이미 처리된 상태"라고 바로 이해하면 됩니다.' },
+    concept: {
+      emoji: '🔧', title: '완료됨 + 당함, 두 가지가 겹칠 때',
+      body: '이번엔 "완료(체크포인트에서 돌아보기)"와 "수동(내가 한 게 아니라 당한 것)"이 동시에 일어나요. "그 일이 이미 (누군가에 의해) 처리된 상태"를 말할 때 써요.',
+      examples: [ {label:'상황', text:'그 카페는 이미 리모델링 되어 있었다 (내가 한 게 아니라 그렇게 되어진 상태)'}, {label:'신호', text:'have/has been + p.p.'} ]
+    },
+    questions: [
+      { type:'mc', part:1, instruction:'"The cafe has been renovated." 이 카페는 스스로 리모델링을 한 걸까요, 아니면 누군가에 의해 그렇게 된 걸까요?',
+        options:['카페가 스스로 리모델링했다','누군가(업체 등)에 의해 리모델링이 완료된 상태다','아직 리모델링되지 않았다','리모델링될 예정이다'],
+        answer:1,
+        feedback:{correct:'맞아요! has been renovated는 "완료(has been)" + "당함(p.p.)"이 겹친 신호라, 누군가에 의해 이미 리모델링이 끝난 상태를 뜻해요.',
+                  wrong:'정답은 "누군가에 의해 리모델링이 완료된 상태"예요. has been + p.p.는 "완료 + 수동"이 합쳐진 신호예요.'} },
+      { type:'mc', part:1, instruction:'다음 중 "이미 (누군가에 의해) 처리 완료된 상태"를 나타내는 문장은?',
+        options:['They have finished the report.','The report has been finished.','They finish the report.','The report finishes.'],
+        answer:1,
+        feedback:{correct:'정확해요! The report has been finished는 보고서가 (누군가에 의해) 이미 완료된 상태임을 나타내요.',
+                  wrong:'정답은 "The report has been finished."예요. has been + p.p.가 "완료 + 당함"의 조합이라는 걸 기억하세요.'} },
+      { type:'mc', part:1, instruction:'"My phone has been fixed."를 들었을 때, 알 수 있는 것은?',
+        options:['내가 직접 폰을 고쳤다','누군가(수리기사 등)에 의해 폰 수리가 이미 끝난 상태다','폰이 아직 고장나 있다','폰을 고칠 계획이다'],
+        answer:1,
+        feedback:{correct:'맞아요! has been fixed는 "누군가에 의해 이미 수리가 완료된 상태"라는 신호예요.',
+                  wrong:'정답은 "누군가에 의해 폰 수리가 이미 끝난 상태"예요. has been + p.p.는 항상 "완료됨 + 남이 해준 것"이라는 두 가지 뜻을 함께 담고 있어요.'} },
+    ]
+  },
+
+  // ══════════════ 그룹 3: 문장확장 (후위수식) ══════════════
+  {
+    id: 'ext_1', group: '③ 문장확장 — 뒤에 계속 붙이기', num: '3-1',
+    name: '명사 뒤에 설명 이어붙이기', topic: '가족·친구 소개',
+    source: '1~2권 토픽 "가족/친구" 실제 질문 응용',
+    structure: { title: '말하기 목표', desc: '명사를 먼저 말한 다음, 그 명사에 대해 더 말하고 싶은 정보가 떠오르면 who/that/which로 뒤에 이어 붙이세요. 문장을 다 계획하지 않고도 길게 말할 수 있습니다.' },
+    concept: {
+      emoji: '🚃', title: '기차 칸을 뒤에 계속 연결하기',
+      body: '한국어는 설명을 다 만들어서 명사 앞에 붙여야 해요. (예: "내가 지난주에 만난 친구") 그래서 말하기 전에 문장을 다 계획해야 하죠. 하지만 영어는 먼저 명사만 말하고, 그 다음 생각나는 설명을 뒤에 이어 붙일 수 있어요. 기차의 마지막 칸에 새 칸을 계속 연결하듯이요. 그래서 말하다가 숨 고르면서 계속 정보를 구체화할 수 있어요.',
+      examples: [ {label:'한국어(전위)', text:'[지난주에 만난] 친구'}, {label:'영어(후위)', text:'친구, [who I met last week]'} ]
+    },
+    questions: [
+      { type:'mc', part:1, instruction:'다음 중 "명사를 먼저 말하고, 그 명사에 대한 설명을 뒤에 이어 붙이는" 영어식 방식으로 자연스러운 문장은?',
+        options:['I have a friend who lives in LA.','I have a who lives in LA friend.','I have a LA-living friend.','Who lives in LA I have a friend.'],
+        answer:0,
+        feedback:{correct:'맞아요! friend를 먼저 말하고 그 다음 who lives in LA로 설명을 이어 붙였어요. 이렇게 명사 뒤에서 설명을 붙이는 절을 문법 용어로 "관계대명사절"이라고 해요.',
+                  wrong:'정답은 "I have a friend who lives in LA."예요. 명사(friend)를 먼저 말하고, 그 뒤에 설명(who lives in LA)을 기차 칸처럼 이어 붙이는 게 핵심이에요.'} },
+      { type:'mc', part:1, instruction:'Q: Tell me about your best friend. 라는 질문에 "내가 고등학교 때부터 알고 지낸 친구"라는 정보를 영어식으로 자연스럽게 이어 붙이려면?',
+        options:['My best friend, who I have known since high school, always makes me laugh.','My high-school-since-known best friend always makes me laugh.','Who I have known since high school my best friend always makes me laugh.','My best friend always who I have known since high school makes me laugh.'],
+        answer:0,
+        feedback:{correct:'정확해요! best friend를 먼저 말하고, 그 뒤에 who I have known since high school을 칸처럼 연결했어요.',
+                  wrong:'정답은 첫 번째 문장이에요. 명사(best friend)를 말한 뒤 콤마로 설명 칸을 이어 붙이면 훨씬 자연스러운 영어가 됩니다.'} },
+      { type:'wordorder', part:2, instruction:'단어(구)를 순서대로 눌러 문장을 완성하세요: "나에게는 부산에 사는 삼촌이 있다"',
+        scenario:'Q: Do you have relatives in other cities?',
+        words:['who lives in Busan','I','an uncle','have'],
+        answer:[1,3,2,0],
+        labels:['주어','동사','명사(핵심 정보)','뒤에 붙는 설명'],
+        feedback:{correct:'완벽해요! I(주어) have(동사) an uncle(명사) who lives in Busan(뒤에 붙는 설명) — 명사를 먼저 말하고 설명을 뒤에 연결했어요.',
+                  wrong:'정답 순서: I → have → an uncle → who lives in Busan. 삼촌(명사)을 먼저 말한 뒤 "부산에 산다"는 설명 칸을 뒤에 연결합니다.'} },
+      { type:'wordorder', part:2, instruction:'단어(구)를 순서대로 눌러 문장을 완성하세요: "이건 내가 가장 좋아하는 카페야"',
+        scenario:'Q: What is your favorite place in this neighborhood?',
+        words:['that I love the most','the cafe','this','is'],
+        answer:[2,3,1,0],
+        labels:['주어','동사','명사(핵심 정보)','뒤에 붙는 설명'],
+        feedback:{correct:'완벽해요! This(주어) is(동사) the cafe(명사) that I love the most(설명) — 카페를 먼저 말하고 "가장 좋아하는"이라는 설명을 뒤에 붙였어요.',
+                  wrong:'정답 순서: This → is → the cafe → that I love the most. 명사(the cafe)부터 말하고, 그 다음 설명 칸을 이어 붙이는 순서를 기억하세요.'} },
+    ]
+  },
+  {
+    id: 'ext_2', group: '③ 문장확장 — 뒤에 계속 붙이기', num: '3-2',
+    name: '순간의 모습을 그림처럼 붙이기', topic: '상황·장면 묘사',
+    source: '1~2권 토픽 "일상/장소" 실제 질문 응용',
+    structure: { title: '말하기 목표', desc: '명사 뒤에 -ing나 -ed를 붙여서, 절을 통째로 만들지 않고도 짧게 그 순간의 모습을 이어 붙일 수 있어요.' },
+    concept: {
+      emoji: '🖼️', title: '그림을 뒤에 덧붙이듯 순간을 설명하기',
+      body: '이번엔 명사 뒤에 -ing나 -ed 형태를 붙여서, 마치 그 장면을 그림처럼 순간적으로 덧붙이는 방법이에요. "무엇을 하고 있는 사람" / "무엇이 된 것"처럼, 절(who/that) 전체를 안 만들어도 짧게 설명을 뒤에 이어붙일 수 있어요.',
+      examples: [ {label:'상황', text:'저기 웃고 있는 남자가 내 형이야'}, {label:'영어(후위)', text:'The man [smiling over there] is my brother.'} ]
+    },
+    questions: [
+      { type:'mc', part:1, instruction:'다음 중 "명사 뒤에 -ing를 붙여서, 그 명사가 지금 뭘 하고 있는지 그림처럼 덧붙이는" 문장은?',
+        options:['The man smiling over there is my brother.','The smiling man over there is my brother.','The man is my brother smiling over there.','Smiling the man over there is my brother.'],
+        answer:0,
+        feedback:{correct:'맞아요! man을 먼저 말하고 뒤에 smiling over there를 붙여서 순간의 모습을 그림처럼 설명했어요. 이런 -ing/-ed 후위수식을 문법 용어로 "분사구문"이라고 불러요.',
+                  wrong:'정답은 "The man smiling over there is my brother."예요. 명사(man)를 먼저 말한 뒤 -ing 그림을 뒤에 붙이는 게 핵심이에요.'} },
+      { type:'mc', part:1, instruction:'Q: Who is she? 라는 질문에 "저기서 커피 마시고 있는 여자"라는 정보를 영어식으로 자연스럽게 뒤에 붙이려면?',
+        options:['She is the woman drinking coffee over there.','She is the coffee-drinking-over-there woman.','Drinking coffee over there, she is the woman.','She is the woman over there drinking coffee she.'],
+        answer:0,
+        feedback:{correct:'정확해요! the woman을 먼저 말하고 drinking coffee over there를 그림처럼 뒤에 붙였어요.',
+                  wrong:'정답은 첫 번째 문장이에요. 명사(the woman)를 말한 뒤, 지금 하고 있는 행동(-ing)을 그 뒤에 이어 붙이면 자연스러워요.'} },
+      { type:'wordorder', part:2, instruction:'단어(구)를 순서대로 눌러 문장을 완성하세요: "저 벤치에 앉아있는 그 남자를 알아요?"',
+        scenario:'상대에게 특정 인물을 가리키며 물어보는 상황',
+        words:['sitting on that bench','the man','do you know'],
+        answer:[2,1,0],
+        labels:['의문 시작','명사','뒤에 붙는 설명(-ing)'],
+        feedback:{correct:'완벽해요! Do you know(의문 시작) the man(명사) sitting on that bench(설명) — 사람을 먼저 말하고 지금 모습을 그림처럼 뒤에 붙였어요.',
+                  wrong:'정답 순서: Do you know → the man → sitting on that bench. 명사부터 말하고 -ing 그림을 뒤에 연결하는 순서를 기억하세요.'} },
+      { type:'wordorder', part:2, instruction:'단어(구)를 순서대로 눌러 문장을 완성하세요: "우리 팀이 쓴 그 보고서가 고객에게 감명을 줬다"',
+        scenario:'Q: How did the presentation go?',
+        words:['written by my team','the report','impressed the client'],
+        answer:[1,0,2],
+        labels:['명사(주어)','뒤에 붙는 설명(-ed)','동사+목적어'],
+        feedback:{correct:'완벽해요! The report(명사) written by my team(설명) impressed the client(동사+목적어) — 보고서 뒤에 "누가 썼는지"를 -ed로 그림처럼 붙였어요.',
+                  wrong:'정답 순서: The report → written by my team → impressed the client. 이번엔 -ed(당한 느낌)로 명사 뒤에 그림을 붙였어요.'} },
+    ]
+  },
+
+  // ══════════════ 그룹 4: 도치 (Inversion) ══════════════
+  {
+    id: 'inv_1', group: '④ 도치 — 순서로 신호 보내기', num: '4-1',
+    name: '순서를 바꿔서 집중시키기', topic: '강조·의문 신호 이해하기',
+    source: '1~2권 전반 실제 질문 패턴 응용',
+    structure: { title: '리스닝 목표', desc: '평서문과 다른 어순을 들으면 "이건 평범한 문장이 아니라 뭔가 신호를 주고 있다"는 걸 즉시 알아채면 됩니다. 의문문의 do/does/did도 사실 같은 원리예요.' },
+    concept: {
+      emoji: '📣', title: '순서를 바꿔서 "집중!"이라는 신호 보내기',
+      body: '평서문과 다른 순서로 말하면, 듣는 사람은 즉시 "어, 뭔가 강조하는구나"라고 느껴요. 사실 의문문도 같은 원리예요 — do/does/did나 동사가 문장 앞으로 튀어나오면, 듣는 사람은 "이건 평서문이 아니라 다른 신호구나" 하고 바로 주의를 집중하게 돼요.',
+      examples: [ {label:'평서문', text:'You have never seen such a beautiful beach.'}, {label:'순서 바꿈(강조)', text:'Never have you seen such a beautiful beach!'} ]
+    },
+    questions: [
+      { type:'mc', part:1, instruction:'"Do you like coffee?"처럼 do/does/did가 문장 맨 앞으로 튀어나온 순서를 들었을 때, 청자가 즉시 느끼는 신호는?',
+        options:['이건 그냥 하는 말(평서문)이구나','이건 질문이구나, 대답을 해야겠다','이건 명령이구나','아무 신호도 없다'],
+        answer:1,
+        feedback:{correct:'맞아요! do/does/did나 동사가 주어 앞으로 튀어나오면 "평서문과 다르다"는 신호가 되고, 그게 바로 의문문이 만들어지는 원리예요. 이런 어순 바뀜을 문법 용어로 "도치"라고 불러요.',
+                  wrong:'정답은 "이건 질문이구나"예요. 어순이 바뀌는 순간 청자는 바로 "평범한 문장이 아니다"라고 느껴요. 이게 도치의 핵심 기능입니다.'} },
+      { type:'mc', part:1, instruction:'"Never have I seen such a beautiful beach!" 이 문장을 들었을 때 드는 느낌은?',
+        options:['그냥 평범하게 정보를 전달하는 느낌','뭔가 강하게 감탄하며 강조하는 느낌','질문하는 느낌','명령하는 느낌'],
+        answer:1,
+        feedback:{correct:'맞아요! 원래는 "I have never seen..."인데, never를 앞으로 보내고 순서를 바꾸면서(have I) 훨씬 강한 감탄·강조의 느낌을 줘요. 이것도 도치 구문이에요.',
+                  wrong:'정답은 "강하게 감탄하며 강조하는 느낌"이에요. 부정어(never)를 앞으로 보내고 어순을 바꾸면 평서문보다 훨씬 강한 인상을 줍니다.'} },
+      { type:'mc', part:1, instruction:'원어민이 "Rarely does he complain about work."라고 말했어요. 이 순서를 듣고 알 수 있는 것은?',
+        options:['그는 자주 불평한다는 평범한 사실 전달','그가 거의 불평하지 않는다는 걸 강조하는 느낌','질문을 하고 있다','과거 이야기를 하고 있다'],
+        answer:1,
+        feedback:{correct:'정확해요! rarely를 앞으로 보내고 does he로 순서를 바꾸면서 "거의 안 그런다"는 사실을 강하게 강조하고 있어요.',
+                  wrong:'정답은 "거의 불평하지 않는다는 걸 강조하는 느낌"이에요. rarely 같은 부정 빈도부사를 앞세우면 항상 어순이 바뀌면서 강조 신호가 됩니다.'} },
+      { type:'mc', part:1, instruction:'다음 중, 평서문과 다른 순서로 말해서 "집중해!"라는 신호를 주는 문장은?',
+        options:['I have never seen a whale.','Never have I seen a whale.','I saw a whale yesterday.','I will see a whale someday.'],
+        answer:1,
+        feedback:{correct:'맞아요! "Never have I seen a whale."은 부정어(never)를 앞세우고 어순을 바꿔서 평서문보다 훨씬 강한 감탄의 느낌을 줍니다.',
+                  wrong:'정답은 "Never have I seen a whale."이에요. 나머지는 모두 평범한 평서문 어순이라 특별한 강조 신호가 없어요.'} },
+    ]
+  },
+
 ];
 
 // ══════════════════════════════════════════════
@@ -432,7 +691,8 @@ function renderSelector() {
 
 function startChapter(id) {
   currentChapter = CHAPTERS.find(c => c.id === id);
-  currentQIdx = 0; score = 0; answers = [];
+  currentQIdx = currentChapter.concept ? -1 : 0;
+  score = 0; answers = [];
   document.getElementById('chapterSelector').style.display = 'none';
   document.getElementById('scoreScreen').classList.remove('visible');
   document.getElementById('quizArea').classList.add('visible');
@@ -456,9 +716,33 @@ function renderStructureHint() {
 }
 
 // ══════════════════════════════════════════════
+// RENDER CONCEPT (0부)
+// ══════════════════════════════════════════════
+function renderConcept() {
+  const c = currentChapter.concept;
+  document.getElementById('questionCounter').textContent = '개념 이해 먼저!';
+  document.getElementById('quizTypeBadge').textContent = '0부 · 개념 이해';
+  document.getElementById('feedbackBox').style.display = 'none';
+  document.getElementById('checkBtn').style.display = 'none';
+  document.getElementById('prevBtn').style.display = 'none';
+  const nb = document.getElementById('nextBtn');
+  nb.style.display = 'inline-block';
+  nb.textContent = '이해했어요, 퀴즈 시작 →';
+  const card = document.getElementById('qCard');
+  card.innerHTML = `
+    <div class="concept-emoji">${c.emoji || '💡'}</div>
+    <div class="concept-title">${c.title}</div>
+    <div class="concept-body">${c.body}</div>
+    ${c.examples ? `<div class="concept-examples">${c.examples.map(e => `<div class="ex-row"><span class="ex-label">${e.label}</span><span class="ex-text">${e.text}</span></div>`).join('')}</div>` : ''}
+  `;
+  updateProgress();
+}
+
+// ══════════════════════════════════════════════
 // RENDER QUESTION
 // ══════════════════════════════════════════════
 function renderQuestion() {
+  if (currentQIdx === -1) { renderConcept(); return; }
   const qs = currentChapter.questions;
   if (currentQIdx >= qs.length) { showScore(); return; }
   const q = qs[currentQIdx];
@@ -472,9 +756,12 @@ function renderQuestion() {
 
   document.getElementById('feedbackBox').style.display = 'none';
   document.getElementById('feedbackBox').className = 'feedback-box';
-  document.getElementById('checkBtn').style.display = (q.type === 'wordorder') ? 'inline-block' : 'none';
-  document.getElementById('nextBtn').style.display = isReview ? 'inline-block' : 'none';
-  document.getElementById('prevBtn').style.display = currentQIdx > 0 ? 'inline-block' : 'none';
+  document.getElementById('checkBtn').style.display = (q.type === 'wordorder' && !isReview) ? 'inline-block' : 'none';
+  const nb = document.getElementById('nextBtn');
+  nb.textContent = '다음 문제 →';
+  nb.style.display = isReview ? 'inline-block' : 'none';
+  const floor = currentChapter.concept ? -1 : 0;
+  document.getElementById('prevBtn').style.display = currentQIdx > floor ? 'inline-block' : 'none';
 
   const card = document.getElementById('qCard');
 
@@ -498,7 +785,7 @@ function renderQuestion() {
           btn.disabled = true;
           if (i === q.answer) btn.classList.add('correct');
         });
-        showFeedback(answers[currentQIdx]?.correct, q);
+        showFeedback(answers[currentQIdx] ? answers[currentQIdx].correct : false, q);
       }, 0);
     }
   } else if (q.type === 'wordorder') {
@@ -517,7 +804,7 @@ function renderQuestion() {
         document.querySelectorAll('.wo-chip').forEach(c => c.disabled = true);
         renderWoTargetReview(q);
         document.getElementById('checkBtn').style.display = 'none';
-        showFeedback(answers[currentQIdx]?.correct, q);
+        showFeedback(answers[currentQIdx] ? answers[currentQIdx].correct : false, q);
       }, 0);
     }
   }
@@ -612,10 +899,8 @@ function showFeedback(correct, q) {
 }
 
 function prevQuestion() {
-  if (currentQIdx <= 0) return;
-  if (answers.length > currentQIdx - 1 && answers[currentQIdx-1] !== undefined) {
-    // keep score consistent; simplest: recompute score from answers
-  }
+  const floor = currentChapter.concept ? -1 : 0;
+  if (currentQIdx <= floor) return;
   currentQIdx--;
   renderQuestion();
 }
@@ -629,7 +914,7 @@ function showScore() {
   const pct = Math.round((score/total)*100);
   document.getElementById('scoreEmoji').textContent = pct>=80?'🎉':pct>=60?'💪':'📖';
   document.getElementById('scoreNum').textContent = `${score} / ${total}`;
-  document.getElementById('scoreSub').textContent = pct>=80?'완벽해요! 이제 수업에서 바로 말해볼 준비가 됐어요.':pct>=60?'절반 이상 맞혔어요. 틀린 문제를 복습해보세요!':'구조를 한 번 더 확인하고 다시 도전해보세요!';
+  document.getElementById('scoreSub').textContent = pct>=80?'완벽해요! 이제 수업에서 바로 말해볼 준비가 됐어요.':pct>=60?'절반 이상 맞혔어요. 틀린 문제를 복습해보세요!':'개념을 한 번 더 확인하고 다시 도전해보세요!';
   const correct = answers.filter(a=>a && a.correct).length;
   const wrong = answers.filter(a=>a && !a.correct).length;
   document.getElementById('scoreBreakdown').innerHTML = `
@@ -643,9 +928,9 @@ function showScore() {
 
 function updateProgress(done=false) {
   const total = currentChapter ? currentChapter.questions.length : 0;
-  const pct = done ? 100 : (total ? Math.round((currentQIdx/total)*100) : 0);
+  const pct = done ? 100 : (total ? Math.round((Math.max(0,currentQIdx)/total)*100) : 0);
   document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressLabel').textContent = done ? `${total} / ${total}` : `${currentQIdx} / ${total}`;
+  document.getElementById('progressLabel').textContent = done ? `${total} / ${total}` : `${Math.max(0,currentQIdx)} / ${total}`;
 }
 
 renderSelector();
